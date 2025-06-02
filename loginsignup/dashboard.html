@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('bg.jpg') no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .dashboard-container {
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px 60px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    #greeting {
+      font-size: 18px;
+      color: #ffd700;
+      margin-bottom: 24px;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #ffd700;
+      color: #222;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffca00;
+      box-shadow: 0 6px 16px rgba(255, 215, 0, 0.8);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 8px rgba(255, 215, 0, 0.5);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+
+  <!-- firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script defer src="firebase-config.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const auth = firebase.auth();
+
+      auth.onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = "index.html";
+        } else {
+          document.getElementById('user-name').textContent = user.displayName || user.email;
+        }
+      });
+
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        auth.signOut();
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1>Welcome, <span id="user-name">User</span>!</h1>
+    <p id="greeting">How was your day?</p>
+    <button id="logout-btn">Logout</button>
+  </div>
+</body>
+</html>

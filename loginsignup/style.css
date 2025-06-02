@@ -1,0 +1,161 @@
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa') no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+/* Container */
+.container {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 40px 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  width: 350px;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background-color: #ffd700;
+  color: #222;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+
+.btn:hover {
+  background-color: #ffcc00;
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+
+.form-box {
+  position: relative;
+  overflow: hidden;
+  height: auto;
+  min-height: 220px;
+}
+
+.form-slide {
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translateX(100%);
+  z-index: 0;
+}
+
+.form-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+}
+
+.left-hidden {
+  transform: translateX(-100%);
+  opacity: 0;
+  z-index: 0;
+}
+
+.right-hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  z-index: 0;
+}
+
+/* Toggle text */
+#toggle-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #fff;
+}
+
+#toggle-link {
+  color: #ffd700;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Error Message */
+#error-msg {
+  margin-top: 15px;
+  color: #ff6b6b;
+  font-size: 14px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#error-msg.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .container {
+    width: 90%;
+    padding: 30px 20px;
+  }
+}

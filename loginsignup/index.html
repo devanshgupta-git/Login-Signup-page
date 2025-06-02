@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Animated Login / Signup</title>
+  <link rel="stylesheet" href="style.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2 id="form-title">Login</h2>
+
+    <div class="form-box">
+<!--login-->
+      <div id="login-form" class="form-slide active">
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input
+          type="password"
+          id="login-password"
+          placeholder="Password"
+          required
+        />
+        <button id="login-btn">Login</button>
+      </div>
+
+ <!--signup-->
+    <div id="signup-form" class="form-slide right-hidden">
+    <input
+      type="text"
+      id="signup-name"
+      placeholder="Full Name"
+      required=""
+    />
+    <input
+      type="email"
+      id="signup-email"
+      placeholder="Email"
+      required=""
+    />
+    <input
+      type="password"
+      id="signup-password"
+      placeholder="Password"
+      required=""
+    />
+    <button id="signup-btn" class="btn">Sign Up</button>
+    </div>
+    </div>
+
+    <p id="toggle-text">
+      Don't have an account?
+      <span id="toggle-link">Sign up</span>
+    </p>
+
+    <p class="error" id="error-msg"></p>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const auth = firebase.auth();
+
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+    const toggleText = document.getElementById("toggle-text");
+    const formTitle = document.getElementById("form-title");
+    const errorMsg = document.getElementById("error-msg");
+
+    let isLogin = true;
+
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.classList.add("show");
+      setTimeout(() => errorMsg.classList.remove("show"), 4000);
+    }
+
+   toggleText.addEventListener("click", function (e) {
+  if (e.target.id === "toggle-link") {
+    isLogin = !isLogin;
+
+    if (isLogin) {
+      // shows log , hide sign
+      loginForm.classList.add("active");
+      loginForm.classList.remove("left-hidden", "right-hidden");
+
+      signupForm.classList.remove("active");
+      signupForm.classList.add("right-hidden");
+
+      toggleText.innerHTML = `Don't have an account? <span id="toggle-link">Sign Up</span>`;
+      formTitle.textContent = "Login";
+    } else {
+      // show sign , hide log
+      signupForm.classList.add("active");
+      signupForm.classList.remove("left-hidden", "right-hidden");
+
+      loginForm.classList.remove("active");
+      loginForm.classList.add("left-hidden");
+
+      toggleText.innerHTML = `Already have an account? <span id="toggle-link">Login</span>`;
+      formTitle.textContent = "Sign Up";
+    }
+  }
+});
+
+
+    function isValidEmail(email) {
+ // check mail
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // basic email pattern
+  return emailRegex.test(email) && email.endsWith("@gmail.com");
+}
+
+// login
+  document.getElementById("login-btn").addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  console.log("Login button clicked");
+
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+
+  if (!email || !password) {
+    showError("Please enter e-mail and password.");
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    showError("Please enter a valid e-mail address.");
+    return;
+  }
+
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    console.log("Login successful for:", userCredential.user.email);
+  } catch (error) {
+    console.error("Login error:", error);
+    showError(error.message);
+  }
+});
+
+
+// signup
+  document.getElementById("signup-btn").addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  console.log("Signup button clicked");
+
+  const name = document.getElementById("signup-name").value.trim();
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
+
+  if (!name || !email || !password) {
+    showError("Please fill in all fields.");
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    showError("Please enter a valid e-mail address.");
+    return;
+  }
+
+  if (password.length < 6) {
+    showError("Password must be at least 6 characters.");
+    return;
+  }
+
+  try {
+    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    // name
+    await user.updateProfile({
+      displayName: name
+    });
+
+    console.log("Signup successful for:", user.email);
+  } catch (error) {
+    console.error("Signup error:", error);
+    showError(error.message);
+  }
+});
+
+    // redirecting dashboard
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        console.log("User is logged in:", user.email);
+        window.location.href = "dashboard.html";
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
